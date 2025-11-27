@@ -5,6 +5,6 @@ from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
-    # test_task.delay()
+    # test_task.delay() ok
 
     return HttpResponse(f'HHM.....Hello World! This is CN Django Test.By - Harsh Kanani aa.....web hooks test harsh kanani webhook testing 123 - harsh43')
