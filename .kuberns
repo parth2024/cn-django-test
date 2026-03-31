@@ -8,5 +8,5 @@ The Kuberns agent monitors this repository and triggers deployment pipelines on 
 
 - On every push, the Kuberns agent picks up the latest commit and begins the build process.
 - The agent provisions the required infrastructure, builds your application, and deploys it to the target environment.
-- Deployment logs and status updates are available in real time on your Kuberns dashboard. 
+- Deployment logs and status updates are available in real time on your Kuberns dashboard.
 
