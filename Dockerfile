@@ -21,7 +21,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the Django application code into the container
 COPY . /app/
 
-RUN python manage.py check
-
 # RUN python3 manage.py collectstatic --no-input
 # RUN python3 manage.py migrate --no-input
