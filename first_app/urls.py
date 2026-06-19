@@ -20,5 +20,6 @@ urlpatterns = [
     path('memory-pressure/', views.trigger_memory_pressure, name='trigger_memory_pressure'),
     path('cpu-spike/', views.trigger_cpu_spike, name='trigger_cpu_spike'),
     path('disk-pressure/', views.trigger_disk_pressure, name='trigger_disk_pressure'),
+    path('disk-pressure/clean/', views.clean_disk_pressure, name='clean_disk_pressure'),
     path('port-conflict/', views.trigger_port_conflict, name='trigger_port_conflict'),
 ]

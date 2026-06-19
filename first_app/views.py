@@ -111,17 +111,21 @@ def trigger_startup_crash(request):
 # Proactive: Memory Pressure (allocate ~85% of limit without crashing)
 # ---------------------------------------------------------------------------
 def trigger_memory_pressure(request):
-    """Allocate memory gradually to push container toward memory limit without OOM.
-    The health agent should detect high memory usage and send a proactive alert.
+    """Allocate memory and HOLD it for N seconds so health agent can detect it.
+    Usage: /memory-pressure/?mb=780&hold=300 (hold 780MB for 5 minutes)
     """
+    import time
     mb = int(request.GET.get('mb', '200'))
+    hold_seconds = int(request.GET.get('hold', '180'))  # default 3 minutes
     chunks = []
     for _ in range(mb):
         chunks.append(b'\x00' * (1024 * 1024))  # 1MB per chunk
+    time.sleep(hold_seconds)
     return JsonResponse({
-        'status': 'allocated',
+        'status': 'released',
         'mb_held': mb,
-        'message': f'Holding {mb}MB in memory. Health agent should detect memory_pressure.',
+        'held_for_seconds': hold_seconds,
+        'message': f'Held {mb}MB for {hold_seconds}s. Memory now released.',
     })
 
 
@@ -163,6 +167,17 @@ def trigger_disk_pressure(request):
         'mb_written': mb,
         'message': f'Wrote ~{mb}MB to disk. Health agent should detect disk_pressure.',
     })
+
+
+def clean_disk_pressure(request):
+    """Remove all files created by /disk-pressure/ test."""
+    import os
+    import shutil
+    path = '/tmp/disk_pressure_test'
+    if os.path.exists(path):
+        shutil.rmtree(path)
+        return JsonResponse({'status': 'cleaned', 'message': 'Disk pressure test files removed.'})
+    return JsonResponse({'status': 'nothing', 'message': 'No test files found.'})
 
 
 # ---------------------------------------------------------------------------
