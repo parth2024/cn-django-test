@@ -41,3 +41,15 @@ def trigger_hang(request):
     import time
     time.sleep(999999)
     return HttpResponse('unreachable')
+
+
+def trigger_disk_full(request):
+    """T7: Write to disk until 'No space left on device' crashes the process."""
+    import os
+    path = '/tmp/disk_fill_test'
+    os.makedirs(path, exist_ok=True)
+    i = 0
+    while True:
+        with open(f'{path}/chunk_{i}.bin', 'wb') as f:
+            f.write(b'\x00' * (100 * 1024 * 1024))  # 100MB per file
+        i += 1
