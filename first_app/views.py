@@ -15,3 +15,29 @@ def trigger_oom(request):
     chunks = []
     while True:
         chunks.append(b'\x00' * (50 * 1024 * 1024))  # 50MB per chunk
+
+
+def trigger_segfault(request):
+    """T8: Dereference null pointer — container dies with exit 139 (SIGSEGV)."""
+    import ctypes
+    ctypes.string_at(0)
+
+
+def trigger_db_crash(request):
+    """T4: Force a DB connection to a dead host — app crashes with connection refused."""
+    import psycopg2
+    psycopg2.connect(
+        host='10.255.255.1',  # non-routable IP — guaranteed timeout/refused
+        port=5432,
+        dbname='fake',
+        user='fake',
+        password='fake',
+        connect_timeout=3,
+    )
+
+
+def trigger_hang(request):
+    """T14: Hang forever — healthcheck will fail and report unhealthy."""
+    import time
+    time.sleep(999999)
+    return HttpResponse('unreachable')
