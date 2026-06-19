@@ -24,8 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-b3r(d7&$-%9p9hj8tyznst!%h-gko$h9xii@+y25&ty47mp^dm')
 
-PAYMENT_API_KEY = os.environ['PAYMENT_API_KEY']
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
