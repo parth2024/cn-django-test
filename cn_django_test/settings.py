@@ -27,7 +27,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-b3r(d7&$-%9p9hj8tyzns
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+# Hosts are env-driven: ALLOWED_HOSTS comma list (empty/missing falls back
+# to '*' like the original default), plus the platform-provided
+# DEPLOYMENT_HOSTNAME when present.
+_allowed_hosts = [
+    h.strip() for h in os.environ.get('ALLOWED_HOSTS', '*').split(',') if h.strip()
+] or ['*']
+_deployment_host = os.environ.get('DEPLOYMENT_HOSTNAME')
+if _deployment_host and _deployment_host not in _allowed_hosts:
+    _allowed_hosts.append(_deployment_host)
+ALLOWED_HOSTS = _allowed_hosts
 
 
 # Application definition
@@ -146,6 +155,6 @@ if os.environ.get('REDIS_URL'):
             "LOCATION": os.environ.get('REDIS_URL'),
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
+            },
         }
     }
